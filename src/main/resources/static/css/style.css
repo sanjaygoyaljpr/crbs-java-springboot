@@ -1,0 +1,148 @@
+* {
+  font-family: "Titillium Web", sans-serif;
+  color: #aaaaaa;
+  box-sizing: border-box;
+}
+
+body {
+  /* background: #f3e942; */
+  /* background-image: url("../img/cisco_mx800.jpg"); */
+  transition: all 2s;
+}
+
+#form, .message {
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.label-active, #form .right-col input:focus + label {
+  font-weight: 600;
+  font-size: .7rem;
+  transform: translate(0, -3rem);
+  color: #888;
+}
+
+h2 {
+  font-size: 1.57rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+#form {
+  width: 600px;
+  height: 400px;
+  z-index: 1;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+}
+
+#form .left-col, #form .right-col {
+  width: 50%;
+  float: left;
+  height: 100%;
+}
+
+#form .left-col {
+  text-align: center;
+  color: #66be44;
+  padding: 5rem 2.14rem;
+  background: #66be44;
+  background-size: cover;
+  font-size: .875rem;
+}
+
+#form .left-col p {
+  line-height: 1.5rem;
+  margin-top: 1.5rem;
+  color: #ffffff;
+}
+
+#form .left-col hr {
+  height: 3px;
+  width: 2.86rem;
+  border: none;
+  background-color: #f3e942;
+}
+
+#form .right-col {
+  padding: 2.7rem 1.875rem;
+  background-color: #ffffff;
+  font-size: .875rem;
+}
+
+#form .right-col label {
+  display: block;
+  transform: translate(0px, -2.8rem);
+  line-height: 1.5rem;
+  transition: all .3s;
+}
+
+#form .right-col input {
+  font-family: "Titillium Web", sans-serif;
+  font-size: .875rem;
+  width: 12.5rem;
+  height: 2.125rem;
+  line-height: 2.125rem;
+  margin-top: -1rem;
+  border: none;
+  border-bottom: 1px solid #aaaaaa;
+}
+
+#form .right-col input[type="submit"] {
+  float: right;
+  width: auto;
+  padding: 0 1.25rem;
+  margin-top: 1.5rem;
+  height: 2.125rem;
+  line-height: 2.125rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 1rem;
+  background-color: #66be44;
+  color: #ffffff;
+  transition: all .5s;
+}
+
+#form .right-col input[type="submit"]:hover {
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.message {
+  font-size: .875rem;
+  background: #ffffff;
+  padding: 2rem;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .5s .5s;
+  width: 15rem;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+}
+
+.message h2 {
+  text-align: center;
+  margin: 0;
+  color: #66be44;
+}
+
+@media (max-width: 520px) {
+  #form {
+    width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+  }
+  #form .left-col, #form .right-col {
+    width: 100%;
+  }
+  #form .right-col input {
+    width: 100%;
+  }
+  #form .right-col input[type='submit'] {
+    width: 100%;
+  }
+}

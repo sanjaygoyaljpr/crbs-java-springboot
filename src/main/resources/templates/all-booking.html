@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset='utf-8' />
+<title>All Bookings</title>
+<meta th:remove="tag" th:include="/fragments/common :: [//head]"/>
+<style>
+body {
+	margin: 40px 10px;
+	padding: 0;
+	font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+.bs-example {
+	margin: 20px;
+}
+
+.margin {
+	margin-right: 6px;
+}
+</style>
+
+<script>
+$(document).ready(function(){
+    $('.table').DataTable();
+});
+</script>
+</head>
+<body>
+	<div class="bs-example">
+		<ul class="nav nav-tabs">
+			<li class="margin">
+				<form method="POST" action="/home">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Home</button>
+				</form>
+			</li>
+			<li class="margin">
+				<form method="POST" action="/myBookings">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">My Bookings</button>
+				</form>
+			</li>
+			<li class="active margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/getAllBookings">
+					<button style="background-color:#e7e7e7; color: black;" type="submit" name="submit" value="value"
+						class="btn btn-primary">All Bookings</button>
+				</form>
+			</li>
+			<li class="margin">
+				<form method="POST" action="/bookConference">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Book Conference Room</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/addConference">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Add Conference Room</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/conferenceRoomList">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Conference Room List</button>
+				</form>
+			</li>
+			<li class="logout" style="float: right;"><a th:href="@{/logout}">Logout</a></li>
+			<li class="logout" style="float: right;"><a href="#">Welcome,
+					<span th:text="${user.name + ' ' + user.lastName}"></span>
+			</a></li>
+		</ul>
+	</div>
+
+	<div class="container">
+		<h2>List of Booked Conference Rooms</h2>
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>S.No</th>
+						<th>Title</th>
+						<th>Conference Room Name</th>
+						<th>Start Date of Booking</th>
+						<th>End Date of Booking</th>
+						<th>Booked By</th>
+						<th>Booked On</th>
+						<th>Status</th>
+						<th>Cancelled By</th>
+						<th>Cancelled Date</th>
+						<th>Action</th>
+						<th style="display:none;">id</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="userConferenceRoom : ${userConferenceRooms}">
+						<td th:text="${userConferenceRoom.srNo}"></td>
+						<td th:text="${userConferenceRoom.title}"></td>
+						<td th:text="${userConferenceRoom.confRoomName}"></td>
+						<td th:text="${userConferenceRoom.startDateOfBooking}"></td>
+						<td th:text="${userConferenceRoom.endDateOfBooking}"></td>
+						<td th:text="${userConferenceRoom.userName}"></td>
+						<td th:if="${userConferenceRoom.createdDate != null}" th:text="${#dates.format(userConferenceRoom.createdDate,'yyyy-MM-dd HH:mm')}"></td>
+						<td th:text="${userConferenceRoom.status}"></td>
+						<td th:text="${userConferenceRoom.cancelledByName}"></td>
+						
+						<td th:if="${userConferenceRoom.cancelledDate != null}" th:text="${#dates.format(userConferenceRoom.cancelledDate,'yyyy-MM-dd HH:mm')}"></td>
+						<td th:unless="${userConferenceRoom.cancelledDate != null}"></td>
+						
+						<td style="text-align: center;" th:if="${userConferenceRoom.status} == 'BOOKED' ">
+							<span style="cursor: pointer;" title="Cancel Conference Room Booking" class="glyphicon glyphicon-remove-circle" 
+								data-toggle="modal" data-target="#allBookingCancel"></span>
+						</td>
+						<td th:unless="${userConferenceRoom.status} == 'BOOKED' "></td>
+						
+						<td style="display:none;" id="ucrId" th:text="${userConferenceRoom.id}"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="allBookingCancel" tabindex="-1" role="dialog" aria-labelledby="allBookingCancelTitle" aria-hidden="true">
+	  <div class="modal-dialog modal-dialog-centered" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLongTitle">Cancel Conference Room Booking</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        Do you want to cancel this booking?
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Confirm</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</body>
+</html>

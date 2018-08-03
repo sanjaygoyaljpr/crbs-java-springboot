@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset='utf-8' />
+<title>Add Conference Room</title>
+<meta th:remove="tag" th:include="/fragments/common :: [//head]"/>
+ 
+<style>
+body {
+	margin: 40px 10px;
+	padding: 0;
+	font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+.bs-example {
+	margin: 20px;
+}
+
+.margin {
+	margin-right: 6px;
+}
+.focus {
+ background-color: #ff00ff;
+ color: #fff;
+ cursor: pointer;
+ font-weight: bold;
+}
+.pageNumber {
+ padding: 2px;
+}
+
+.validation-message {
+	font-style: normal;
+	font-size: 12px;
+	color: #FF1C19;
+}
+
+.success-message {
+	font-style: normal;
+	font-size: 20px;
+	color: #008000;
+}
+</style>
+
+<script>
+$(document).ready(function(){
+    $('.table').DataTable();
+});
+</script>
+
+</head>
+<body>
+	<div class="bs-example">
+		<ul class="nav nav-tabs">
+			<li class="margin">
+				<form method="POST" action="/home">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Home</button>
+				</form>
+			</li>
+			<li class="margin">
+				<form method="POST" action="/myBookings">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">My Bookings</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/getAllBookings">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">All Bookings</button>
+				</form>
+			</li>
+			<li class="margin">
+				<form method="POST" action="/bookConference">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Book Conference Room</button>
+				</form>
+			</li>
+			<li class="active margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/addConference">
+					<button type="submit" style="background-color:#e7e7e7; color: black;" name="submit" value="value"
+						class="btn btn-primary">Add Conference Room</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/conferenceRoomList">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Conference Room List</button>
+				</form>
+			</li>
+			<li class="logout" style="float: right;"><a th:href="@{/logout}">Logout</a></li>
+			<li class="logout" style="float: right;"><a href="#">Welcome, <span
+					th:text="${user.name + ' ' + user.lastName}"></span></a></li>
+		</ul>
+	</div>
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<form autocomplete="off" action="#" th:action="@{/createConference}"
+					th:object="${conferenceRoom}" method="post" class="form-horizontal"
+					role="form">
+					<h2>Create Conference Room</h2>
+					
+					<div class="form-group">
+						<div class="col-sm-9">
+							<label for="confRoomName">Conference Room Name</label>
+							<label th:if="${#fields.hasErrors('confRoomName')}" th:errors="*{confRoomName}" class="validation-message"></label>
+							<input type="text" th:field="*{confRoomName}" placeholder="Conference Room Name | Max 50 characters" class="form-control" /> 
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							<label for="projector">Projector Available <input type="checkbox" th:field="*{projector}" placeholder="Projector Available" /> </label>
+							<label th:if="${#fields.hasErrors('projector')}" th:errors="*{projector}" class="validation-message"></label>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							<label for="seatCapacity">Seat Capacity</label>
+							<label th:if="${#fields.hasErrors('seatCapacity')}" th:errors="*{seatCapacity}" class="validation-message"></label>
+							<input type="number" th:field="*{seatCapacity}" placeholder="Seat Capacity between 1 to 99" class="form-control" /> 
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-9">
+							<label for="voipCallAvailable">
+								VOIP Call Available
+								<input type="checkbox" th:field="*{voipAvailable}" placeholder="VOIP Call Available" /> 
+							</label>
+							<label th:if="${#fields.hasErrors('voipAvailable')}" th:errors="*{voipAvailable}" class="validation-message"></label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<div class="col-sm-9">
+							<button type="submit" class="btn btn-primary btn-block">Submit</button>
+						</div>
+					</div>
+					
+					<span class="success-message" th:utext="${successMessage}"></span>
+					
+				</form>
+			</div>
+		</div>
+	</div>
+	
+</body>
+
+</html>

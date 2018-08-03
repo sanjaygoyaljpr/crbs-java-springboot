@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<head>
+<meta charset='utf-8' />
+<title>Book Conference Room</title>
+<meta th:remove="tag" th:include="/fragments/common :: [//head]" />
+
+<link th:href="@{/css/bootstrap-datetimepicker.min.css}" rel='stylesheet'></link>
+<!-- <link th:href="@{/css/jquery.timepicker.min.css}" rel='stylesheet' /> -->
+
+<script th:src="@{/js/bootstrap-datetimepicker.min.js}"></script>
+<!-- <script th:src='@{/js/jquery.timepicker.min.js}'></script> -->
+<script th:src='@{/js/bootbox.min.js}'></script>
+<style>
+body {
+	margin: 40px 10px;
+	padding: 0;
+	font-family: "Lucida Grande", Helvetica, Arial, Verdana, sans-serif;
+	font-size: 14px;
+}
+
+.bs-example {
+	margin: 20px;
+}
+
+.margin {
+	margin-right: 6px;
+}
+
+.animated {
+	margin-left: 19px;
+}
+
+.success-message {
+	font-style: normal;
+	font-size: 20px;
+	color: #008000;
+}
+
+.error-message {
+	font-style: normal;
+	font-size: 20px;
+	color: #FF0000;
+}
+
+</style>
+<script>
+	$(document).ready(function() {
+		var spanId = $("#confRoomId").val();
+		$("#projector" + spanId).attr('style', 'display: block !important;');
+		$("#seatCapacity" + spanId).attr('style', 'display: block !important;');
+		$("#voip" + spanId).attr('style', 'display: block !important;');
+		
+		$("#confRoomId").change(
+			function() {
+				$(".hide").hide();
+				$("#projector" + $(this).val()).attr('style', 'display: block !important;');
+				$("#seatCapacity" + $(this).val()).attr('style', 'display: block !important;');
+				$("#voip" + $(this).val()).attr('style', 'display: block !important;');
+		});
+		
+		var startDateVar;
+
+		$('#datetimepicker1,#startDateOfBooking').datetimepicker({
+			minDate: new Date(),
+			format: 'YYYY-MM-DD HH:mm',
+			//roundTime: 'ceil'
+		});
+	        
+		$('#datetimepicker2,#endDateOfBooking').datetimepicker({
+	            //useCurrent: false,
+	            minDate: new Date(),
+	            format: 'YYYY-MM-DD HH:mm'
+	    });
+		
+		$('#myForm').submit(function() {
+			var startDate = $("#startDateOfBooking").val();
+			var endDate = $("#endDateOfBooking").val();
+			
+			if (new Date(startDate) >= new Date(endDate)) {
+				alert("Meeting End date must be greater than Start date!!");
+				return false;
+			}
+			
+			var finalStartDate = startDate.split(' ')[0] + 'T' + startDate.split(' ')[1];
+			var finalEndDate = endDate.split(' ')[0] + 'T' + endDate.split(' ')[1];
+			
+			$("#startDateOfBooking").val(finalStartDate);
+			$("#endDateOfBooking").val(finalEndDate);
+			
+		    return true;
+		});
+		
+	});
+</script>
+</head>
+<body>
+	<div class="bs-example">
+		<ul class="nav nav-tabs">
+			<li class="margin">
+				<form method="POST" action="/home">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Home</button>
+				</form>
+			</li>
+			<li class="margin">
+				<form method="POST" action="/myBookings">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">My Bookings</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/getAllBookings">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">All Bookings</button>
+				</form>
+			</li>
+			<li class="active margin">
+				<form method="POST" action="/bookConference">
+					<button type="submit"
+						style="background-color: #e7e7e7; color: black;" name="submit"
+						value="value" class="btn btn-primary">Book Conference
+						Room</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/addConference">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Add Conference Room</button>
+				</form>
+			</li>
+			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+				<form method="POST" action="/conferenceRoomList">
+					<button type="submit" name="submit" value="value"
+						class="btn btn-primary">Conference Room List</button>
+				</form>
+			</li>
+			<li class="logout" style="float: right;"><a th:href="@{/logout}">Logout</a></li>
+			<li class="logout" style="float: right;"><a href="#">Welcome,
+					<span th:text="${user.name + ' ' + user.lastName}"></span>
+			</a></li>
+		</ul>
+	</div>
+
+<div class="animated" id="form">
+	<div class="alert alert-info" style="width: 300px;">
+		<strong>Book Your Conference Room</strong>
+	</div>
+		
+	<div class="row">
+		<div class="col-md-6">
+			<form id="myForm" action="/bookConferenceRoom" method="post">
+				<div class="form-group" >
+					<label for="title">Title</label> 
+					<input class="form-control" type="text" id="title" name="title" required="true" /> 
+					<br/>
+				</div>
+				
+				<div class="form-group" style="width: 300px;">
+					<label for="conferenceRoom">Please Select Your Conference Room</label>
+					
+					<select class="form-control" id="confRoomId" name="confRoomId" required="true" >
+						<option th:each="conferenceRoom : ${conferenceRooms}"
+							th:value="${conferenceRoom.id}"
+							th:text="${conferenceRoom.confRoomName}">
+						</option>
+					</select>
+					
+				</div>
+			
+				
+				<!-- Date Of Booking -->
+				<div class="form-group" >
+					<div class="row">
+						<div class="col-xs-12">
+							<label for="datetimepicker1">Please Select Date Of Booking</label>
+						</div>
+						<div class="col-xs-5">
+							<div class='input-group date' id='datetimepicker1'>
+								<input type='text' class="form-control" id="startDateOfBooking" name="startDateOfBooking" required="true"/> 
+								<span class="input-group-addon"> 
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+						<div class="col-xs-2 text-center"><strong>to</strong></div>
+						<div class="col-xs-5">
+							<div class='input-group date' id='datetimepicker2'>
+								<input type='text' class="form-control" id="endDateOfBooking" name="endDateOfBooking" required="true"/> 
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<button style="width: 150px;" class="btn btn-primary" type="submit" id="submit">Book</button>
+			</form>
+		</div>
+		
+		<div class="col-md-4">
+			<div class="form-group">
+				<th:block th:each="conferenceRoom : ${conferenceRooms}">
+					<span class="hide alert alert-info" style="display: none"
+						th:id="${'projector'+conferenceRoom.id}"
+						th:switch="${conferenceRoom.projector}"> 
+						<span th:case="true">Projector Available</span> 
+						<span th:case="false">Projector Not Available</span>
+					</span>
+					<span class="hide alert alert-info" style="display: none"
+						th:id="${'seatCapacity'+conferenceRoom.id}"
+						th:text="${'Seat Capactity :'+conferenceRoom.seatCapacity}">
+					</span>
+					<span class="hide alert alert-info" style="display: none"
+						th:id="${'voip'+conferenceRoom.id}"
+						th:switch="${conferenceRoom.voipAvailable}"> 
+						<span th:case="true">VOIP Available</span> 
+						<span th:case="false">VOIP Not Available</span>
+					</span>
+				</th:block>
+			</div>
+		</div>
+	</div>
+		
+	<div class="right-col">
+
+		<div class="form-group" th:if="${message != null}">
+			<br>
+			<span class="success-message" th:if="${message.msgType} == 'SUCCESS' " id="successMessage" th:text="${message.msg}"></span>
+			<span class="error-message" th:if="${message.msgType} == 'ERROR' " id="errorMessage" th:text="${message.msg}"></span>
+		</div>
+		
+	</div>
+</div>
+
+</body>
+</html>
