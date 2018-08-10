@@ -27,7 +27,36 @@ body {
 <script>
 $(document).ready(function(){
     $('.table').DataTable();
+    
+    $('.myBookingCancel').click(function() {
+    	$.confirm({
+    		closeIcon: true,
+    	    title: 'Cancel',
+    	    content: 'Do you want to cancel Conference Room booking.',
+    	    buttons: {
+    	        confirm: function () {
+    	            //$.alert('Confirmed!');
+    	            var ucrId = $(this).closest('span').find(".ucrId").val();
+    	            $.alert({
+    	                title: 'Message',
+    	                content: 'Successfully Cancelled!' + ucrId,
+    	                animation: 'scale',
+    	                closeAnimation: 'scale',
+    	                buttons: {
+    	                  okay: {
+    	                    text: 'Okay',
+    	                    btnClass: 'btn-blue'
+    	                  }
+    	                }
+    	              });
+    	        },
+    	        close: function () {
+    	        }
+    	    }
+    	});
+    });
 });
+
 </script>
 </head>
 <body>
@@ -110,8 +139,8 @@ $(document).ready(function(){
 						<td th:unless="${userConferenceRoom.cancelledDate != null}"></td>
 						
 						<td style="text-align: center;" th:if="${userConferenceRoom.status} == 'BOOKED' ">
-							<span style="cursor: pointer;" title="Cancel Conference Room Booking" class="glyphicon glyphicon-remove-circle" 
-								data-toggle="modal" data-target="#myBookingCancel"></span>
+							<span style="cursor: pointer;" class="myBookingCancel glyphicon glyphicon-remove-circle" ></span>
+							<span style="display:none;" class="ucrId" th:text="${userConferenceRoom.id}"></span>
 						</td>
 						<td th:unless="${userConferenceRoom.status} == 'BOOKED' "></td>
 						
@@ -120,29 +149,6 @@ $(document).ready(function(){
 				</tbody>
 			</table>
 		</div>
-	</div>
-	
-	<!-- Modal -->
-	<div class="modal fade" id="myBookingCancel" tabindex="-1" role="dialog" aria-labelledby="myBookingCancelTitle" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLongTitle">Cancel Conference Room Booking</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        Do you want to cancel this booking?
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <form method="POST" action="/cancelUserBooking">
-	        	<button type="button" class="btn btn-primary">Confirm</button>
-	        </form>
-	      </div>
-	    </div>
-	  </div>
 	</div>
 
 </body>

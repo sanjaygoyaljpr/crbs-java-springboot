@@ -26,7 +26,7 @@ public class ConferenceRoomServiceImpl implements ConferenceRoomService {
 
 	@Override
 	public ConferenceRoom findOne(Long conferenceRoomId) {
-		return conferenceRoomRepository.findOne(conferenceRoomId);
+		return conferenceRoomRepository.getOne(conferenceRoomId);
 	}
 
 	@Override

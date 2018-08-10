@@ -10,6 +10,4 @@ public interface ConferenceRoomRepository extends JpaRepository<ConferenceRoom, 
 
 	ConferenceRoom findByConfRoomNameContainingIgnoreCase(String confRoomName);
 
-	ConferenceRoom findOne(Long conferenceRoomId);
-
 }

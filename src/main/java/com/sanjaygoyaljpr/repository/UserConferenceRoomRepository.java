@@ -14,6 +14,4 @@ public interface UserConferenceRoomRepository extends JpaRepository<UserConferen
 
 	List<UserConferenceRoom> findByConferenceRoomId(Long confRoomId);
 
-	UserConferenceRoom findOne(Long id);
-
 }

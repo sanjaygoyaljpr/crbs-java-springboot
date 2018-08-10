@@ -37,7 +37,7 @@ public class UserConferenceRoomServiceImpl implements UserConferenceRoomService 
 
 	@Override
 	public UserConferenceRoom findOne(Long id) {
-		return userConferenceRoomRepository.findOne(id);
+		return userConferenceRoomRepository.getOne(id);
 	}
 
 }
