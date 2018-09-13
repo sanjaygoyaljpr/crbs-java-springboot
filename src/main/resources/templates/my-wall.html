@@ -121,7 +121,7 @@ body {
 						class="btn btn-primary">My Bookings</button>
 				</form>
 			</li>
-			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+			<li class="margin" sec:authorize="hasAuthority('ROLE_ADMIN')">
 				<form method="POST" action="/getAllBookings">
 					<button type="submit" name="submit" value="value"
 						class="btn btn-primary">All Bookings</button>
@@ -133,13 +133,13 @@ body {
 						class="btn btn-primary">Book Conference Room</button>
 				</form>
 			</li>
-			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+			<li class="margin" sec:authorize="hasAuthority('ROLE_ADMIN')">
 				<form method="POST" action="/addConference">
 					<button type="submit" name="submit" value="value"
 						class="btn btn-primary">Add Conference Room</button>
 				</form>
 			</li>
-			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+			<li class="margin" sec:authorize="hasAuthority('ROLE_ADMIN')">
 				<form method="POST" action="/conferenceRoomList">
 					<button type="submit" name="submit" value="value"
 						class="btn btn-primary">Conference Room List</button>
@@ -148,7 +148,7 @@ body {
 			<li class="logout" style="float: right;"><a th:href="@{/logout}"
 				class="post-request">Logout</a></li>
 			<li class="logout" style="float: right;"><a href="#"
-				class="post-request">Welcome, <span th:text="${user.name + ' ' + user.lastName}"></span></a></li>
+				class="post-request">Welcome, <span th:text="${user.firstName + ' ' + user.lastName}"></span></a></li>
 		</ul>
 	</div>
 	

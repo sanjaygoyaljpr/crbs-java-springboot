@@ -43,7 +43,7 @@ $(document).ready(function(){
 						class="btn btn-primary">My Bookings</button>
 				</form>
 			</li>
-			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+			<li class="margin" sec:authorize="hasAuthority('ROLE_ADMIN')">
 				<form method="POST" action="/getAllBookings">
 					<button type="submit" name="submit" value="value"
 						class="btn btn-primary">All Bookings</button>
@@ -55,13 +55,13 @@ $(document).ready(function(){
 						class="btn btn-primary">Book Conference Room</button>
 				</form>
 			</li>
-			<li class="margin" sec:authorize="hasAuthority('ADMIN')">
+			<li class="margin" sec:authorize="hasAuthority('ROLE_ADMIN')">
 				<form method="POST" action="/addConference">
 					<button type="submit" name="submit" value="value"
 						class="btn btn-primary">Add Conference Room</button>
 				</form>
 			</li>
-			<li class="active margin" sec:authorize="hasAuthority('ADMIN')">
+			<li class="active margin" sec:authorize="hasAuthority('ROLE_ADMIN')">
 				<form method="POST" action="/conferenceRoomList">
 					<button type="submit" style="background-color:#e7e7e7; color: black;" name="submit" value="value"
 						class="btn btn-primary">Conference Room List</button>
@@ -69,7 +69,7 @@ $(document).ready(function(){
 			</li>
 			<li class="logout" style="float: right;"><a th:href="@{/logout}">Logout</a></li>
 			<li class="logout" style="float: right;"><a href="#">Welcome,
-					<span th:text="${user.name + ' ' + user.lastName}"></span>
+					<span th:text="${user.firstName + ' ' + user.lastName}"></span>
 			</a></li>
 		</ul>
 	</div>
